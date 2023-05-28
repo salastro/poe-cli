@@ -1,6 +1,10 @@
 # POE-CLI
 Command line interface for Poe.
 
+
+https://github.com/salastro/poe-cli/assets/63563250/d4a2333c-0707-410a-818e-3fb0a644a2c4
+
+
 ## Installation
 ```
 git clone https://github.com/salastro/poe-cli.git
