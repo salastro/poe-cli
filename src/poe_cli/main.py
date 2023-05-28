@@ -1,5 +1,4 @@
 import argparse
-import json
 import sys
 
 import poe
@@ -40,12 +39,10 @@ def list_bots(client: poe.Client) -> Table:
     :returns: TODO
 
     """
-    bots = json.dumps(client.bot_names)
-    bots = json.loads(bots)
+    bots = client.bot_names
     table = Table(title="Bots")
     table.add_column("Bot ID", justify="center", style="cyan", no_wrap=True)
-    table.add_column("Bot Name", justify="center",
-                     style="magenta", no_wrap=True)
+    table.add_column("Bot Name", justify="center", style="magenta", no_wrap=True)
     for bot in bots:
         table.add_row(bot, bots[bot])
     return table
