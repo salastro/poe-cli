@@ -9,10 +9,11 @@ from rich.panel import Panel
 from rich.table import Table
 
 
-def parse_args() -> argparse.Namespace:
-    """TODO: Docstring for parse_args.
-    :returns: TODO
+def parse_args() -> argparse.ArgumentParser:
+    """
+    Parse command line arguments for the script.
 
+    :returns: An argparse.ArgumentParser instance.
     """
     parser = argparse.ArgumentParser(
         description="Command line interface for Poe.")
@@ -26,6 +27,13 @@ def parse_args() -> argparse.Namespace:
 
 
 def load_token(token: str, console: Console) -> poe.Client:
+    """
+    Load the POE (Poe) token and create a Poe client.
+
+    :param token: The POE token as a string.
+    :param console: A rich Console object for displaying progress.
+    :returns: A connected poe.Client instance.
+    """
     with console.status("[bold red]POE[/bold red][green] is loading..."):
         client = poe.Client(token)
         console.print("[bold red]POE[/bold red][green] is ready!")
@@ -33,11 +41,11 @@ def load_token(token: str, console: Console) -> poe.Client:
 
 
 def list_bots(client: poe.Client) -> Table:
-    """TODO: Docstring for list_bots.
+    """
+    Get a list of available bots and format them as a rich Table.
 
-    :client: TODO
-    :returns: TODO
-
+    :param client: A connected poe.Client instance.
+    :returns: A rich Table containing the bot ID and bot name.
     """
     bots = client.bot_names
     table = Table(title="Bots")
@@ -59,7 +67,7 @@ def main():
     BOT = args.bot
     LIST_BOTS = args.list
 
-    # if there is no argument, print help
+    # If there is no argument, print help
     if not LIST_BOTS and not MESSAGE:
         parser.print_help()
         sys.exit(1)
