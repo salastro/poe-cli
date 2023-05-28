@@ -109,14 +109,15 @@ def main():
         sys.exit(0)
 
     if CHAT:
+        client.send_chat_break(BOT)
         while True:
             # Ask for another message
             MESSAGE = input("> ")
-            # Display the live panel with the chat conversation
-            live_panel(console, client, BOT, MESSAGE, False)
             # If the message is empty, exit
             if not MESSAGE:
                 exit(0)
+            # Display the live panel with the chat conversation
+            live_panel(console, client, BOT, MESSAGE, False)
     else:
         live_panel(console, client, BOT, MESSAGE, True)
 
