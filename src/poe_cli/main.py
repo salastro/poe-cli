@@ -23,6 +23,7 @@ def parse_args() -> argparse.ArgumentParser:
     parser.add_argument("-b", "--bot", type=str,
                         default="chinchilla", help="Bot ID")
     parser.add_argument("-m", "--message", type=str, help="Message to send")
+    parser.add_argument("-c", "--chat", help="Chat mode", action="store_true")
     return parser
 
 
@@ -58,7 +59,7 @@ def list_bots(client: poe.Client) -> Table:
 
 
 def live_panel(console: Console, client: poe.Client, bot: str,
-               message: str) -> None:
+               message: str, with_chat_break: bool = True) -> None:
     """
     Display the live panel with the chat conversation.
 
@@ -74,7 +75,7 @@ def live_panel(console: Console, client: poe.Client, bot: str,
     with Live(panel, console=console) as live:
         response = ""
         for chunk in client.send_message(bot, message,
-                                         with_chat_break=True):
+                                         with_chat_break=with_chat_break):
             response += chunk["text_new"]
             panel = Panel(Markdown(response))
             live.update(panel)
@@ -90,9 +91,10 @@ def main():
     MESSAGE = args.message
     BOT = args.bot
     LIST_BOTS = args.list
+    CHAT = args.chat
 
     # If there is no argument, print help
-    if not LIST_BOTS and not MESSAGE:
+    if (not LIST_BOTS and not MESSAGE) and not CHAT:
         parser.print_help()
         sys.exit(1)
 
@@ -106,8 +108,17 @@ def main():
         console.print(list_bots(client))
         sys.exit(0)
 
-    # Display the live panel with the chat conversation
-    live_panel(console, client, BOT, MESSAGE)
+    if CHAT:
+        while True:
+            # Ask for another message
+            MESSAGE = input("> ")
+            # Display the live panel with the chat conversation
+            live_panel(console, client, BOT, MESSAGE, False)
+            # If the message is empty, exit
+            if not MESSAGE:
+                exit(0)
+    else:
+        live_panel(console, client, BOT, MESSAGE, True)
 
 
 if __name__ == "__main__":
