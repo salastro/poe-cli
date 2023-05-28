@@ -50,10 +50,34 @@ def list_bots(client: poe.Client) -> Table:
     bots = client.bot_names
     table = Table(title="Bots")
     table.add_column("Bot ID", justify="center", style="cyan", no_wrap=True)
-    table.add_column("Bot Name", justify="center", style="magenta", no_wrap=True)
+    table.add_column("Bot Name", justify="center", style="magenta",
+                     no_wrap=True)
     for bot in bots:
         table.add_row(bot, bots[bot])
     return table
+
+
+def live_panel(console: Console, client: poe.Client, bot: str,
+               message: str) -> None:
+    """
+    Display the live panel with the chat conversation.
+
+    :param console: A rich Console object for displaying the live panel.
+    :param client: A connected poe.Client instance.
+    :param bot: The bot ID to send the message to.
+    :param message: The message to send to the bot.
+    """
+    # Create a Panel to show the message in
+    panel = Panel("")
+
+    # Create a Live context manager with the Panel to update text
+    with Live(panel, console=console) as live:
+        response = ""
+        for chunk in client.send_message(bot, message,
+                                         with_chat_break=True):
+            response += chunk["text_new"]
+            panel = Panel(Markdown(response))
+            live.update(panel)
 
 
 def main():
@@ -82,17 +106,8 @@ def main():
         console.print(list_bots(client))
         sys.exit(0)
 
-    # Create a Panel to show the message in
-    panel = Panel("")
-
-    # Create a Live context manager with the Panel to update text
-    with Live(panel, console=console) as live:
-        response = ""
-        for chunk in client.send_message(BOT, MESSAGE,
-                                         with_chat_break=True):
-            response += chunk["text_new"]
-            panel = Panel(Markdown(response))
-            live.update(panel)
+    # Display the live panel with the chat conversation
+    live_panel(console, client, BOT, MESSAGE)
 
 
 if __name__ == "__main__":
