@@ -96,7 +96,7 @@ def main():
     # If there is no argument, print help
     if (not LIST_BOTS and not MESSAGE) and not CHAT:
         parser.print_help()
-        sys.exit(1)
+        sys.exit(2)
 
     # Create console, for cool stuff
     console = Console()
