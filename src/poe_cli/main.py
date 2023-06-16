@@ -22,6 +22,8 @@ def parse_args() -> argparse.ArgumentParser:
     parser.add_argument("-l", "--list", help="List bots", action="store_true")
     parser.add_argument("-b", "--bot", type=str,
                         default="chinchilla", help="Bot ID")
+    parser.add_argument("-B", "--break", help="Force chat break",
+                        dest="no_break", action="store_true")
     parser.add_argument("-m", "--message", type=str, help="Message to send")
     parser.add_argument("-c", "--chat", help="Chat mode", action="store_true")
     return parser
@@ -92,6 +94,7 @@ def main():
     BOT = args.bot
     LIST_BOTS = args.list
     CHAT = args.chat
+    BREAK = args.no_break
 
     # If there is no argument, print help
     if (not LIST_BOTS and not MESSAGE) and not CHAT:
@@ -119,7 +122,7 @@ def main():
             # Display the live panel with the chat conversation
             live_panel(console, client, BOT, MESSAGE, False)
     else:
-        live_panel(console, client, BOT, MESSAGE, True)
+        live_panel(console, client, BOT, MESSAGE, not BREAK)
 
 
 if __name__ == "__main__":
